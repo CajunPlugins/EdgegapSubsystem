@@ -1,0 +1,66 @@
+// Copyright 2024 Rise Of A Legend.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Interfaces/IHttpRequest.h"
+#include "Matchmaking/MatchmakingStructures.h"
+#include "Subsystems/GameInstanceSubsystem.h"
+#include "EdgegapSubsystem.generated.h"
+
+class AMatchmaker;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTicketResponseDelegate, FTicketData, Data);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnErrorDeletage, FString, Reason = "");
+
+DECLARE_LOG_CATEGORY_EXTERN(LogEdgegapSubsystem, Log, All);
+
+#define EG_LOG(Verbosity, Format, ...) UE_LOG(LogEdgegapSubsystem, Verbosity, Format, ##__VA_ARGS__)
+
+/**
+ * 
+ */
+UCLASS()
+class EDGEGAPONLINESUBSYSTEM_API UEdgegapSubsystem : public UGameInstanceSubsystem
+{
+	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintCallable, Category="Subsystems|Edgegap|Matchmaking")
+	void CreateTicket(const FMatchmakerConfig& Config, const FMatchmakerSettings& Settings);
+
+	UFUNCTION(BlueprintCallable, Category="Subsystems|Edgegap|Matchmaking")
+	void GetTicket(const FMatchmakerConfig& Config, const FString& TicketId);
+
+	UFUNCTION(BlueprintCallable, Category="Subsystems|Edgegap|Matchmaking")
+	void DeleteTicket(const FMatchmakerConfig& Config, const FString& TicketId);
+
+	UFUNCTION(BlueprintPure, Category="Subsystems|Edgegap|Matchmaking", meta=(AutoCreateRefTerm="Id"))
+	AMatchmaker* GetMatchmaker(const FString& Id);
+
+	void RegisterMatchmaker(const FString& Id, AMatchmaker* Matchmaker);
+	void UnregisterMatchmaker(const FString& Id);
+protected:
+	void HandleCreateTicket(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void HandleGetTicket(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void HandleDeleteTicket(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	
+public:
+	UPROPERTY(BlueprintAssignable)
+	FOnTicketResponseDelegate OnTicketCreated;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnTicketResponseDelegate OnTicketRetrieved;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnTicketResponseDelegate OnTicketDeleted;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnErrorDeletage OnError;
+	
+protected:
+	UPROPERTY()
+	TMap<FString, AMatchmaker*> RegisteredMatchmakers;
+	
+private:
+	static TSharedRef<IHttpRequest> CreateRequest(const FMatchmakerConfig& Config, const FString& Endpoint, const FString& Method = "GET");
+};
