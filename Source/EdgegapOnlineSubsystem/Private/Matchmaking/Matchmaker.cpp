@@ -1,10 +1,5 @@
-﻿// Copyright 2024 Rise Of A Legend.
+﻿#include "Matchmaking/Matchmaker.h"
 
-
-#include "Matchmaking/Matchmaker.h"
-
-
-// Sets default values
 AMatchmaker::AMatchmaker()
 {
 	PrimaryActorTick.bCanEverTick = true;

@@ -1,6 +1,4 @@
-﻿// Copyright 2024 Rise Of A Legend.
-
-// ReSharper disable CppUEBlueprintImplementableEventNotImplemented
+﻿// ReSharper disable CppUEBlueprintImplementableEventNotImplemented
 #pragma once
 
 #include "CoreMinimal.h"

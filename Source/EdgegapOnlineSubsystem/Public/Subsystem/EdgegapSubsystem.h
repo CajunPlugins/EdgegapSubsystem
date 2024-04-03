@@ -1,5 +1,3 @@
-// Copyright 2024 Rise Of A Legend.
-
 #pragma once
 
 #include "CoreMinimal.h"

@@ -1,6 +1,3 @@
-// Copyright 2024 Rise Of A Legend.
-
-
 #include "Subsystem/EdgegapSubsystem.h"
 
 #include "HttpModule.h"
