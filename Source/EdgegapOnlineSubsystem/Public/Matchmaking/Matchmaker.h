@@ -1,9 +1,9 @@
 ﻿// ReSharper disable CppUEBlueprintImplementableEventNotImplemented
+// ReSharper disable CppUEBlueprintCallableFunctionUnused
 #pragma once
 
-#include "CoreMinimal.h"
+#include "MatchmakingStructures.h"
 #include "GameFramework/Actor.h"
-#include "Subsystem/EdgegapSubsystem.h"
 #include "Matchmaker.generated.h"
 
 UCLASS(BlueprintType)
@@ -87,8 +87,4 @@ private:
 
 	UPROPERTY(Transient)
 	FTimerHandle MatchStatusTimerHandle;
-	
-	UPROPERTY(Transient)
-	UEdgegapSubsystem* Subsystem = nullptr;
-
 };
