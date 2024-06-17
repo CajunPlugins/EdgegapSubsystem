@@ -1,5 +1,7 @@
 ﻿#include "Matchmaking/Matchmaker.h"
+#include "Subsystem/EdgegapSubsystem.h"
 
+// Sets default values
 AMatchmaker::AMatchmaker()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -14,7 +16,7 @@ void AMatchmaker::StartMatchmaking()
 		if (Config.IsValid())
 		{
 			bMatchmaking = true;
-			Subsystem->CreateTicket(Config, Settings);
+			UEdgegapSubsystem::Get(this)->CreateTicket(Config, Settings);
 		} else
 		{
 			OnError("Invalid config");
@@ -29,7 +31,7 @@ void AMatchmaker::CancelMatchmaking()
 {
 	if (bMatchmaking)
 	{
-		Subsystem->DeleteTicket(Config, CurrentTicketData.Id);
+		UEdgegapSubsystem::Get(this)->DeleteTicket(Config, CurrentTicketData.Id);
 	} else
 	{
 		OnError("Not matchmaking");
@@ -95,28 +97,24 @@ bool AMatchmaker::IsMatchmaking() const
 void AMatchmaker::BeginPlay()
 {
 	Super::BeginPlay();
-	if (UWorld* World = GetWorld())
+	
+	if (UEdgegapSubsystem* Subsystem = UEdgegapSubsystem::Get(this))
 	{
-		if (UGameInstance* GameInstance = World->GetGameInstance())
-		{
-			Subsystem = GameInstance->GetSubsystem<UEdgegapSubsystem>();
-		}
+	    Subsystem->OnTicketCreated.AddDynamic(this, &ThisClass::HandleTicketCreated);
+	    Subsystem->OnTicketRetrieved.AddDynamic(this, &ThisClass::HandleTicketRetrieved);
+	    Subsystem->OnTicketDeleted.AddDynamic(this, &ThisClass::HandleTicketDeleted);
+	    Subsystem->OnError.AddDynamic(this, &ThisClass::HandleError);
+	    Subsystem->RegisterMatchmaker(Config.Id, this);
 	}
-	if (!Subsystem)
+	else
 	{
 		Destroy();
-		return;
 	}
-	Subsystem->OnTicketCreated.AddDynamic(this, &ThisClass::HandleTicketCreated);
-	Subsystem->OnTicketRetrieved.AddDynamic(this, &ThisClass::HandleTicketRetrieved);
-	Subsystem->OnTicketDeleted.AddDynamic(this, &ThisClass::HandleTicketDeleted);
-	Subsystem->OnError.AddDynamic(this, &ThisClass::HandleError);
-	Subsystem->RegisterMatchmaker(Config.Id, this);
 }
 
 void AMatchmaker::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	if (Subsystem)
+	if (UEdgegapSubsystem* Subsystem = UEdgegapSubsystem::Get(this))
 	{
 		Subsystem->OnTicketCreated.RemoveAll(this);
 		Subsystem->OnTicketRetrieved.RemoveAll(this);
@@ -173,6 +171,6 @@ void AMatchmaker::HandleError(const FString Reason)
 
 void AMatchmaker::PollCurrentProgress()
 {
-	Subsystem->GetTicket(Config, CurrentTicketData.Id);
+	UEdgegapSubsystem::Get(this)->GetTicket(Config, CurrentTicketData.Id);
 }
 

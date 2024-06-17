@@ -3,6 +3,7 @@
 #include "HttpModule.h"
 #include "JsonObjectConverter.h"
 #include "Interfaces/IHttpResponse.h"
+#include "Utils/http.h"
 #include "Utils/json.h"
 
 DEFINE_LOG_CATEGORY(LogEdgegapSubsystem);
@@ -81,64 +82,68 @@ void UEdgegapSubsystem::UnregisterMatchmaker(const FString& Id)
 }
 
 // ReSharper disable once CppPassValueParameterByConstReference
-void UEdgegapSubsystem::HandleCreateTicket(FHttpRequestPtr, FHttpResponsePtr Response, const bool bWasSuccessful)
+void UEdgegapSubsystem::HandleCreateTicket(FHttpRequestPtr RequestPtr, FHttpResponsePtr ResponsePtr, const bool bWasSuccessful)
 {
 	if (bWasSuccessful)
 	{
-		const FString StringResponse = Response->GetContentAsString();
-		EG_LOG(Log, TEXT("HandleCreateTicketResponse::%s"), *StringResponse);
-		const FEdgegapResponse EdgegapResponse = FEdgegapResponse(StringResponse);
-		const FTicketData TicketData = EdgegapResponse.GetData<FTicketData>();
-		OnTicketCreated.Broadcast(TicketData);
+		EG_LOG(Log, TEXT("HandleCreateTicketResponse::%s"), *ResponsePtr->GetContentAsString());
+		OnTicketCreated.Broadcast( FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString()).GetData<FTicketData>());
 	} else
 	{
-		EG_LOG(Error, TEXT("HandleCreateTicketResponse::%s"), *Response->GetContentAsString());
-		OnError.Broadcast(*Response->GetContentAsString());
+		EG_LOG(Error, TEXT("HandleCreateTicketResponse::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
+		OnError.Broadcast(*FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
 	}
 }
 
 // ReSharper disable once CppPassValueParameterByConstReference
-void UEdgegapSubsystem::HandleGetTicket(FHttpRequestPtr, FHttpResponsePtr Response, const bool bWasSuccessful)
+void UEdgegapSubsystem::HandleGetTicket(FHttpRequestPtr RequestPtr, FHttpResponsePtr ResponsePtr, const bool bWasSuccessful)
 {
 	if (bWasSuccessful)
 	{
-		const FString StringResponse = Response->GetContentAsString();
-		EG_LOG(Log, TEXT("HandleGetTicketResponse::%s"), *StringResponse);
-		const FEdgegapResponse EdgegapResponse = FEdgegapResponse(StringResponse);
-		const FTicketData TicketData = EdgegapResponse.GetData<FTicketData>();
-		OnTicketRetrieved.Broadcast(TicketData);
+		EG_LOG(Log, TEXT("HandleGetTicketResponse::%s"), *ResponsePtr->GetContentAsString());
+		OnTicketRetrieved.Broadcast(FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString()).GetData<FTicketData>());
 	} else
 	{
-		EG_LOG(Error, TEXT("HandleGetTicketResponse::%s"), *Response->GetContentAsString());
-		OnError.Broadcast(*Response->GetContentAsString());
+		EG_LOG(Error, TEXT("HandleGetTicketResponse::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
+		OnError.Broadcast(*FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
 	}
 }
 
 
 // ReSharper disable once CppPassValueParameterByConstReference
-void UEdgegapSubsystem::HandleDeleteTicket(FHttpRequestPtr, FHttpResponsePtr Response, const bool bWasSuccessful)
+void UEdgegapSubsystem::HandleDeleteTicket(FHttpRequestPtr RequestPtr, FHttpResponsePtr ResponsePtr, const bool bWasSuccessful)
 {
 	if (bWasSuccessful)
 	{
-		const FString StringResponse = Response->GetContentAsString();
-		EG_LOG(Log, TEXT("HandleDeleteTicket::%s"), *StringResponse);
-		const FEdgegapResponse EdgegapResponse = FEdgegapResponse(StringResponse);
-		const FTicketData TicketData = EdgegapResponse.GetData<FTicketData>();
-		OnTicketDeleted.Broadcast(TicketData);
+		EG_LOG(Log, TEXT("HandleDeleteTicket::%s"), *ResponsePtr->GetContentAsString());
+		OnTicketDeleted.Broadcast(FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString()).GetData<FTicketData>());
 	} else
 	{
-		EG_LOG(Error, TEXT("HandleDeleteTicket::%s"), *Response->GetContentAsString());
-		OnError.Broadcast(*Response->GetContentAsString());
+		EG_LOG(Error, TEXT("HandleDeleteTicket::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
+		OnError.Broadcast(*FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
 	}
 }
 
 TSharedRef<IHttpRequest> UEdgegapSubsystem::CreateRequest(const FMatchmakerConfig& Config, const FString& Endpoint, const FString& Method)
 {
 	FHttpModule& HttpModule = FHttpModule::Get();
-	const TSharedRef<IHttpRequest> Request = HttpModule.CreateRequest();
+	TSharedRef<IHttpRequest> Request = HttpModule.CreateRequest();
 	Request->SetVerb(Method);
 	Request->SetHeader("Authorization", *Config.Token);
 	Request->SetHeader("Content-Type", "application/json");
 	Request->SetURL(FString::Printf(TEXT("%s/v1%s"), *Config.Url, *Endpoint));
+	Request->SetTimeout(10);
 	return Request;
+}
+
+UEdgegapSubsystem* UEdgegapSubsystem::Get(const UObject* WorldContextObject)
+{
+	if (WorldContextObject)
+	{
+		if (UWorld* World = WorldContextObject->GetWorld())
+		{
+			return World->GetGameInstance()->GetSubsystem<UEdgegapSubsystem>();
+		}
+	}
+	return nullptr;
 }
