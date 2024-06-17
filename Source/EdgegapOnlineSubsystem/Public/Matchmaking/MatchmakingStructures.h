@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Utils/json.h"
-
 #include "MatchmakingStructures.generated.h"
 
 USTRUCT(BlueprintType)
@@ -14,15 +12,7 @@ struct EDGEGAPONLINESUBSYSTEM_API FTicketAssignment
 
 	bool IsValid() const { return !Host.IsEmpty() && Host.Contains(":"); }
 	
-	FTicketAssignment(){}
-	
-	explicit FTicketAssignment(const TSharedPtr<FJsonObject>& JsonObject)
-	{
-		if (JsonObject->HasTypedField<EJson::String>("server_host"))
-		{
-			Host = JsonObject->GetStringField("server_host");
-		}
-	}
+	static FTicketAssignment FromJson(const TSharedPtr<class FJsonObject>& JsonObject);
 };
 
 USTRUCT(BlueprintType)
@@ -38,19 +28,7 @@ struct EDGEGAPONLINESUBSYSTEM_API FTicketData
 
 	bool IsAssigned() const { return Assignment.IsValid(); }
 	
-	FTicketData(){}
-	
-	explicit FTicketData(const TSharedPtr<FJsonObject>& JsonObject)
-	{
-		if (JsonObject->HasTypedField<EJson::String>("ticket_id"))
-		{
-			Id = JsonObject->GetStringField("ticket_id");
-		}
-		if (JsonObject->HasTypedField<EJson::Object>("assignment"))
-		{
-			Assignment = FTicketAssignment(JsonObject->GetObjectField("assignment"));
-		}
-	}
+	static FTicketData FromJson(const TSharedPtr<FJsonObject>& JsonObject);
 };
 
 struct EDGEGAPONLINESUBSYSTEM_API FEdgegapResponse
@@ -59,20 +37,10 @@ struct EDGEGAPONLINESUBSYSTEM_API FEdgegapResponse
 	TSharedPtr<FJsonObject> Data;
 
 	template<typename TData>
-	TData GetData() const { return TData(Data); }
+	TData GetData() const { return TData::FromJson(Data); }
 	
-	explicit FEdgegapResponse(const TSharedPtr<FJsonObject>& JsonObject)
-	{
-		RequestId = JsonObject->GetStringField("request_id");
-		Data = JsonObject->GetObjectField("data");
-	}
-
-	explicit FEdgegapResponse(const FString& JsonString)
-	{
-		const TSharedPtr<FJsonObject>& JsonObject = FJsonUtils::StringToJsonObject(JsonString);
-		RequestId = JsonObject->GetStringField("request_id");
-		Data = JsonObject->GetObjectField("data");
-	}
+	static FEdgegapResponse FromJson(const TSharedPtr<FJsonObject>& JsonObject);
+	static FEdgegapResponse FromJson(const FString& JsonString);
 
 };
 
@@ -90,18 +58,8 @@ struct EDGEGAPONLINESUBSYSTEM_API FMatchmakerSettings
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<FString, FString> Filters;
 
-	TSharedPtr<FJsonObject> ToJson() const
-	{
-		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
-		JsonObject->SetStringField("edgegap_profile_id", *ProfileId);
-		TSharedPtr<FJsonObject> MatchmakingJsonObject = MakeShareable(new FJsonObject);
-		MatchmakingJsonObject->SetObjectField("selector_data", FJsonUtils::MapToJsonObject(Selectors));
-		MatchmakingJsonObject->SetObjectField("filter_data", FJsonUtils::MapToJsonObject(Filters));
-		JsonObject->SetObjectField("matchmaking_data", MatchmakingJsonObject);
-		return JsonObject;
-	}
-
-	FString ToJsonString() const { return FJsonUtils::JsonObjectToString(ToJson()); }
+	TSharedPtr<FJsonObject> ToJson() const;
+	FString ToJsonString() const;
 };
 
 USTRUCT(BlueprintType)
