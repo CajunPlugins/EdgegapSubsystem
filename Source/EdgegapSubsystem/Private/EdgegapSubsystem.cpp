@@ -1,10 +1,11 @@
-#include "Subsystem/EdgegapSubsystem.h"
+// Copyright 2024 Cajun Pro LLC. All Rights Reserved.
 
+#include "EdgegapSubsystem.h"
 #include "HttpModule.h"
 #include "JsonObjectConverter.h"
 #include "Interfaces/IHttpResponse.h"
-#include "Utils/http.h"
-#include "Utils/json.h"
+#include "Utils/HTTPUtils.h"
+#include "Utils/JSONUtils.h"
 
 DEFINE_LOG_CATEGORY(LogEdgegapSubsystem);
 
@@ -18,7 +19,7 @@ void UEdgegapSubsystem::CreateTicket(const FMatchmakerConfig& Config, const FMat
 		Request->ProcessRequest();
 	} else
 	{
-		EG_LOG(Error, TEXT("CreateTicket::Invalid Config"));
+		EGSS_LOG(Error, TEXT("CreateTicket::Invalid Config"));
 		OnError.Broadcast("InvalidConfig");
 	}
 }
@@ -34,12 +35,12 @@ void UEdgegapSubsystem::GetTicket(const FMatchmakerConfig& Config, const FString
 			Request->ProcessRequest();
 		} else
 		{
-			EG_LOG(Error, TEXT("GetTicket::Invalid Config"));
+			EGSS_LOG(Error, TEXT("GetTicket::Invalid Config"));
 			OnError.Broadcast("InvalidConfig");;
 		}
 	} else
 	{
-		EG_LOG(Error, TEXT("GetTicket::Empty TicketId"));
+		EGSS_LOG(Error, TEXT("GetTicket::Empty TicketId"));
 		OnError.Broadcast("EmptyTicketId");
 	}
 	
@@ -56,12 +57,12 @@ void UEdgegapSubsystem::DeleteTicket(const FMatchmakerConfig& Config, const FStr
 			Request->ProcessRequest();
 		} else
 		{
-			EG_LOG(Error, TEXT("DeleteTicket::Invalid Config"));
+			EGSS_LOG(Error, TEXT("DeleteTicket::Invalid Config"));
 			OnError.Broadcast("InvalidConfig");;
 		}
 	} else
 	{
-		EG_LOG(Error, TEXT("DeleteTicket::Empty TicketId"));
+		EGSS_LOG(Error, TEXT("DeleteTicket::Empty TicketId"));
 		OnError.Broadcast("EmptyTicketId");
 	}
 }
@@ -86,11 +87,11 @@ void UEdgegapSubsystem::HandleCreateTicket(FHttpRequestPtr RequestPtr, FHttpResp
 {
 	if (bWasSuccessful)
 	{
-		EG_LOG(Log, TEXT("HandleCreateTicketResponse::%s"), *ResponsePtr->GetContentAsString());
+		EGSS_LOG(Log, TEXT("HandleCreateTicketResponse::%s"), *ResponsePtr->GetContentAsString());
 		OnTicketCreated.Broadcast( FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString()).GetData<FTicketData>());
 	} else
 	{
-		EG_LOG(Error, TEXT("HandleCreateTicketResponse::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
+		EGSS_LOG(Error, TEXT("HandleCreateTicketResponse::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
 		OnError.Broadcast(*FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
 	}
 }
@@ -100,11 +101,11 @@ void UEdgegapSubsystem::HandleGetTicket(FHttpRequestPtr RequestPtr, FHttpRespons
 {
 	if (bWasSuccessful)
 	{
-		EG_LOG(Log, TEXT("HandleGetTicketResponse::%s"), *ResponsePtr->GetContentAsString());
+		EGSS_LOG(Log, TEXT("HandleGetTicketResponse::%s"), *ResponsePtr->GetContentAsString());
 		OnTicketRetrieved.Broadcast(FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString()).GetData<FTicketData>());
 	} else
 	{
-		EG_LOG(Error, TEXT("HandleGetTicketResponse::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
+		EGSS_LOG(Error, TEXT("HandleGetTicketResponse::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
 		OnError.Broadcast(*FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
 	}
 }
@@ -115,11 +116,11 @@ void UEdgegapSubsystem::HandleDeleteTicket(FHttpRequestPtr RequestPtr, FHttpResp
 {
 	if (bWasSuccessful)
 	{
-		EG_LOG(Log, TEXT("HandleDeleteTicket::%s"), *ResponsePtr->GetContentAsString());
+		EGSS_LOG(Log, TEXT("HandleDeleteTicket::%s"), *ResponsePtr->GetContentAsString());
 		OnTicketDeleted.Broadcast(FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString()).GetData<FTicketData>());
 	} else
 	{
-		EG_LOG(Error, TEXT("HandleDeleteTicket::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
+		EGSS_LOG(Error, TEXT("HandleDeleteTicket::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
 		OnError.Broadcast(*FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
 	}
 }

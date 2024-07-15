@@ -1,7 +1,9 @@
-﻿#include "Matchmaking/MatchmakingStructures.h"
+﻿// Copyright 2024 Cajun Pro LLC. All Rights Reserved.
 
+#include "Matchmaking/MatchmakingStructures.h"
 #include "Dom/JsonObject.h"
-#include "Utils/json.h"
+#include "Matchmaking/EdgegapSubsystemMatchmakingMacros.h"
+#include "Utils/JSONUtils.h"
 
 FTicketAssignment FTicketAssignment::FromJson(const TSharedPtr<FJsonObject>& JsonObject)
 
@@ -57,3 +59,18 @@ TSharedPtr<FJsonObject> FMatchmakerSettings::ToJson() const {
 }
 
 FString FMatchmakerSettings::ToJsonString() const { return FJsonUtils::JsonObjectToString(ToJson()); }
+
+bool FMatchmakerConfig::IsValid() const
+{
+	if (Token.IsEmpty())
+	{
+		EGMM_LOG(Error, TEXT("MatchmakerConfig::No API Token Set"));
+		return false;
+	}
+	if (Url.IsEmpty())
+	{
+		EGMM_LOG(Error, TEXT("MatchmakerConfig::No URL Set"));
+		return false;
+	}
+	return true;
+}

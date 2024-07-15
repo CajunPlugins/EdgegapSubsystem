@@ -1,9 +1,11 @@
+// Copyright 2024 Cajun Pro LLC. All Rights Reserved.
+
 #pragma once
 
 #include "MatchmakingStructures.generated.h"
 
 USTRUCT(BlueprintType)
-struct EDGEGAPONLINESUBSYSTEM_API FTicketAssignment
+struct EDGEGAPSUBSYSTEM_API FTicketAssignment
 {
 	GENERATED_BODY()
 
@@ -16,7 +18,7 @@ struct EDGEGAPONLINESUBSYSTEM_API FTicketAssignment
 };
 
 USTRUCT(BlueprintType)
-struct EDGEGAPONLINESUBSYSTEM_API FTicketData
+struct EDGEGAPSUBSYSTEM_API FTicketData
 {
 	GENERATED_BODY()
 
@@ -31,7 +33,7 @@ struct EDGEGAPONLINESUBSYSTEM_API FTicketData
 	static FTicketData FromJson(const TSharedPtr<FJsonObject>& JsonObject);
 };
 
-struct EDGEGAPONLINESUBSYSTEM_API FEdgegapResponse
+struct EDGEGAPSUBSYSTEM_API FEdgegapResponse
 {
 	FString RequestId;
 	TSharedPtr<FJsonObject> Data;
@@ -45,7 +47,7 @@ struct EDGEGAPONLINESUBSYSTEM_API FEdgegapResponse
 };
 
 USTRUCT(BlueprintType, Blueprintable)
-struct EDGEGAPONLINESUBSYSTEM_API FMatchmakerSettings
+struct EDGEGAPSUBSYSTEM_API FMatchmakerSettings
 {
 	GENERATED_BODY()
 
@@ -63,7 +65,7 @@ struct EDGEGAPONLINESUBSYSTEM_API FMatchmakerSettings
 };
 
 USTRUCT(BlueprintType)
-struct EDGEGAPONLINESUBSYSTEM_API FMatchmakerConfig
+struct EDGEGAPSUBSYSTEM_API FMatchmakerConfig
 {
 	GENERATED_BODY()
 
@@ -76,18 +78,5 @@ struct EDGEGAPONLINESUBSYSTEM_API FMatchmakerConfig
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(DisplayName="API Token"))
 	FString Token;
 	
-	bool IsValid() const
-	{
-		if (Token.IsEmpty())
-		{
-			UE_LOG(LogTemp, Error, TEXT("MatchmakerConfig::No API Token Set"));
-			return false;
-		}
-		if (Url.IsEmpty())
-		{
-			UE_LOG(LogTemp, Error, TEXT("MatchmakerConfig::No URL Set"));
-			return false;
-		}
-		return true;
-	}
+	bool IsValid() const;
 };

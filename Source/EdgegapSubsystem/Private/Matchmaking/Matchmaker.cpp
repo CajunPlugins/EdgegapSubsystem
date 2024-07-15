@@ -1,5 +1,8 @@
-﻿#include "Matchmaking/Matchmaker.h"
-#include "Subsystem/EdgegapSubsystem.h"
+﻿// Copyright 2024 Cajun Pro LLC. All Rights Reserved.
+
+#include "Matchmaking/Matchmaker.h"
+#include "EdgegapSubsystem.h"
+#include "Matchmaking/EdgegapSubsystemMatchmakingMacros.h"
 
 // Sets default values
 AMatchmaker::AMatchmaker()
@@ -45,7 +48,7 @@ void AMatchmaker::SetSettings(const FMatchmakerSettings& NewSettings)
 		Settings = NewSettings;
 	} else
 	{
-		EG_LOG(Error, TEXT("SetSettings:Settings cannot be changed while matchmaking"));
+		EGMM_LOG(Error, TEXT("SetSettings:Settings cannot be changed while matchmaking"));
 	}
 }
 
@@ -56,7 +59,7 @@ void AMatchmaker::SetProfileId(const FString& NewProfileId)
 		Settings.ProfileId = NewProfileId;
 	} else
 	{
-		EG_LOG(Error, TEXT("SetProfileId::ProfileId cannot be changed while matchmaking"))
+		EGMM_LOG(Error, TEXT("SetProfileId::ProfileId cannot be changed while matchmaking"))
 	}
 }
 
@@ -67,7 +70,7 @@ void AMatchmaker::SetFilters(const TMap<FString, FString>& NewFilters)
 		Settings.Filters = NewFilters;
 	} else
 	{
-		EG_LOG(Error, TEXT("SetFilters::Filters cannot be changed while matchmaking"))
+		EGMM_LOG(Error, TEXT("SetFilters::Filters cannot be changed while matchmaking"))
 	}
 }
 
@@ -78,15 +81,12 @@ void AMatchmaker::SetSelectors(const TMap<FString, FString>& NewSelectors)
 		Settings.Selectors = NewSelectors;
 	} else
 	{
-		EG_LOG(Error, TEXT("SetSelectors::Selectors cannot be changed while matchmaking"))
+		EGMM_LOG(Error, TEXT("SetSelectors::Selectors cannot be changed while matchmaking"))
 	}
 }
 
-void AMatchmaker::ConnectToMatch(const FString& UrlOptions)
-{
-
-	GetWorld()->GetFirstPlayerController()->ClientTravel(FString::Printf(TEXT("%s%s"), *CurrentTicketData.Assignment.Host, *UrlOptions), TRAVEL_Absolute, false);
-}
+// ReSharper disable once CppUE4BlueprintCallableFunctionMayBeConst
+void AMatchmaker::ConnectToMatch(const FString& UrlOptions) { GetWorld()->GetFirstPlayerController()->ClientTravel(FString::Printf(TEXT("%s%s"), *CurrentTicketData.Assignment.Host, *UrlOptions), TRAVEL_Absolute, false); }
 
 bool AMatchmaker::IsMatchmaking() const
 {

@@ -1,8 +1,11 @@
+// Copyright 2024 Cajun Pro LLC. All Rights Reserved.
+
 #pragma once
 
-class EDGEGAPONLINESUBSYSTEM_API FJsonUtils
+struct EDGEGAPSUBSYSTEM_API FJsonUtils
 {
-public:
+	FJsonUtils() = delete;
+	
 	static FString JsonObjectToString(const TSharedPtr<FJsonObject>& JsonObject)
 	{
 		FString Out;

@@ -1,5 +1,7 @@
-﻿// ReSharper disable CppUEBlueprintImplementableEventNotImplemented
+﻿// Copyright 2024 Cajun Pro LLC. All Rights Reserved.
+// ReSharper disable CppUEBlueprintImplementableEventNotImplemented
 // ReSharper disable CppUEBlueprintCallableFunctionUnused
+
 #pragma once
 
 #include "MatchmakingStructures.h"
@@ -7,7 +9,7 @@
 #include "Matchmaker.generated.h"
 
 UCLASS(BlueprintType)
-class EDGEGAPONLINESUBSYSTEM_API AMatchmaker : public AActor
+class EDGEGAPSUBSYSTEM_API AMatchmaker : public AActor
 {
 	GENERATED_BODY()
 

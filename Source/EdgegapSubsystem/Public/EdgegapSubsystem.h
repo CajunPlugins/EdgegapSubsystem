@@ -1,3 +1,5 @@
+// Copyright 2024 Cajun Pro LLC. All Rights Reserved.
+
 #pragma once
 
 #include "Interfaces/IHttpRequest.h"
@@ -10,13 +12,13 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnErrorDeletage, FString, Reason = 
 
 DECLARE_LOG_CATEGORY_EXTERN(LogEdgegapSubsystem, Log, All);
 
-#define EG_LOG(Verbosity, Format, ...) UE_LOG(LogEdgegapSubsystem, Verbosity, Format, ##__VA_ARGS__)
+#define EGSS_LOG(Verbosity, Format, ...) UE_LOG(LogEdgegapSubsystem, Verbosity, Format, ##__VA_ARGS__)
 
 /**
  * 
  */
 UCLASS()
-class EDGEGAPONLINESUBSYSTEM_API UEdgegapSubsystem : public UGameInstanceSubsystem
+class EDGEGAPSUBSYSTEM_API UEdgegapSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
@@ -31,9 +33,9 @@ public:
 	void DeleteTicket(const FMatchmakerConfig& Config, const FString& TicketId);
 
 	UFUNCTION(BlueprintPure, Category="Subsystems|Edgegap|Matchmaking", meta=(AutoCreateRefTerm="Id"))
-	AMatchmaker* GetMatchmaker(const FString& Id);
+	class AMatchmaker* GetMatchmaker(const FString& Id);
 
-	void RegisterMatchmaker(const FString& Id, AMatchmaker* Matchmaker);
+	void RegisterMatchmaker(const FString& Id, class AMatchmaker* Matchmaker);
 	void UnregisterMatchmaker(const FString& Id);
 protected:
 	void HandleCreateTicket(FHttpRequestPtr RequestPtr, FHttpResponsePtr ResponsePtr, bool bWasSuccessful);

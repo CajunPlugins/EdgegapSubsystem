@@ -1,10 +1,15 @@
+// Copyright 2024 Cajun Pro LLC. All Rights Reserved.
+
 #pragma once
+
 #include "Interfaces/IHttpRequest.h"
 #include "Interfaces/IHttpResponse.h"
 
-namespace FHttpUtils
+struct EDGEGAPSUBSYSTEM_API FHttpUtils
 {
-	inline FString GetErrorString(const FHttpRequestPtr& RequestPtr, const FHttpResponsePtr& ResponsePtr)
+	FHttpUtils() = delete;
+	
+	static FString GetErrorString(const FHttpRequestPtr& RequestPtr, const FHttpResponsePtr& ResponsePtr)
 	{
 		FString Error = "HTTP Request Error";
 		if (ResponsePtr.IsValid())
@@ -16,4 +21,4 @@ namespace FHttpUtils
 		}
 		return Error;
 	}
-}
+};
