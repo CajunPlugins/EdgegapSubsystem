@@ -43,6 +43,10 @@ FEdgegapResponse FEdgegapResponse::FromJson(const TSharedPtr<FJsonObject>& JsonO
 	{
 		EdgegapResponse.Data = JsonObject->GetObjectField(TEXT("data"));
 	}
+	if (JsonObject->HasTypedField<EJson::String>(TEXT("error")))
+	{
+		EdgegapResponse.Error = JsonObject->GetStringField(TEXT("error"));
+	}
 	return EdgegapResponse;
 }
 

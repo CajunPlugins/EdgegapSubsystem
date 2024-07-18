@@ -37,7 +37,10 @@ struct EDGEGAPSUBSYSTEM_API FEdgegapResponse
 {
 	FString RequestId;
 	TSharedPtr<FJsonObject> Data;
+	FString Error;
 
+	bool HasError() const { return !Error.IsEmpty(); }
+	
 	template<typename TData>
 	TData GetData() const { return TData::FromJson(Data); }
 	

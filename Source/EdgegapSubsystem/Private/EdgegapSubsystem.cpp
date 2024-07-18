@@ -88,12 +88,16 @@ void UEdgegapSubsystem::HandleCreateTicket(FHttpRequestPtr RequestPtr, FHttpResp
 	if (bWasSuccessful)
 	{
 		EGSS_LOG(Log, TEXT("HandleCreateTicketResponse::%s"), *ResponsePtr->GetContentAsString());
-		OnTicketCreated.Broadcast( FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString()).GetData<FTicketData>());
-	} else
-	{
-		EGSS_LOG(Error, TEXT("HandleCreateTicketResponse::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
-		OnError.Broadcast(*FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
+		FEdgegapResponse Response = FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString());
+		if (Response.HasError())
+		{
+			EGSS_LOG(Error, TEXT("HandleCreateTicketResponse::%s"), Response.Error);
+			return OnError.Broadcast(Response.Error);
+		}
+		return OnTicketCreated.Broadcast(Response.GetData<FTicketData>());
 	}
+	EGSS_LOG(Error, TEXT("HandleCreateTicketResponse::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
+	OnError.Broadcast(*FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
 }
 
 // ReSharper disable once CppPassValueParameterByConstReference
@@ -102,12 +106,16 @@ void UEdgegapSubsystem::HandleGetTicket(FHttpRequestPtr RequestPtr, FHttpRespons
 	if (bWasSuccessful)
 	{
 		EGSS_LOG(Log, TEXT("HandleGetTicketResponse::%s"), *ResponsePtr->GetContentAsString());
-		OnTicketRetrieved.Broadcast(FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString()).GetData<FTicketData>());
-	} else
-	{
-		EGSS_LOG(Error, TEXT("HandleGetTicketResponse::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
-		OnError.Broadcast(*FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
+		FEdgegapResponse Response = FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString()); 
+		if (Response.HasError())
+		{
+			EGSS_LOG(Error, TEXT("HandleGetTicketResponse::%s"), Response.Error);
+			return OnError.Broadcast(Response.Error);
+		}
+		return OnTicketRetrieved.Broadcast(Response.GetData<FTicketData>());
 	}
+	EGSS_LOG(Error, TEXT("HandleGetTicketResponse::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
+	OnError.Broadcast(*FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
 }
 
 
@@ -117,12 +125,16 @@ void UEdgegapSubsystem::HandleDeleteTicket(FHttpRequestPtr RequestPtr, FHttpResp
 	if (bWasSuccessful)
 	{
 		EGSS_LOG(Log, TEXT("HandleDeleteTicket::%s"), *ResponsePtr->GetContentAsString());
-		OnTicketDeleted.Broadcast(FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString()).GetData<FTicketData>());
-	} else
-	{
-		EGSS_LOG(Error, TEXT("HandleDeleteTicket::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
-		OnError.Broadcast(*FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
+		FEdgegapResponse Response = FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString());
+		if (Response.HasError())
+		{
+			EGSS_LOG(Error, TEXT("HandleGetTicketResponse::%s"), Response.Error);
+			return OnError.Broadcast(Response.Error);
+		}
+		return OnTicketRetrieved.Broadcast(Response.GetData<FTicketData>());
 	}
+	EGSS_LOG(Error, TEXT("HandleDeleteTicket::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
+	OnError.Broadcast(*FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
 }
 
 TSharedRef<IHttpRequest> UEdgegapSubsystem::CreateRequest(const FMatchmakerConfig& Config, const FString& Endpoint, const FString& Method)
