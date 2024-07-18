@@ -91,7 +91,7 @@ void UEdgegapSubsystem::HandleCreateTicket(FHttpRequestPtr RequestPtr, FHttpResp
 		FEdgegapResponse Response = FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString());
 		if (Response.HasError())
 		{
-			EGSS_LOG(Error, TEXT("HandleCreateTicketResponse::%s"), Response.Error);
+			EGSS_LOG(Error, TEXT("HandleCreateTicketResponse::%s"), *Response.Error);
 			return OnError.Broadcast(Response.Error);
 		}
 		return OnTicketCreated.Broadcast(Response.GetData<FTicketData>());
@@ -109,7 +109,7 @@ void UEdgegapSubsystem::HandleGetTicket(FHttpRequestPtr RequestPtr, FHttpRespons
 		FEdgegapResponse Response = FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString()); 
 		if (Response.HasError())
 		{
-			EGSS_LOG(Error, TEXT("HandleGetTicketResponse::%s"), Response.Error);
+			EGSS_LOG(Error, TEXT("HandleGetTicketResponse::%s"), *Response.Error);
 			return OnError.Broadcast(Response.Error);
 		}
 		return OnTicketRetrieved.Broadcast(Response.GetData<FTicketData>());
@@ -128,7 +128,7 @@ void UEdgegapSubsystem::HandleDeleteTicket(FHttpRequestPtr RequestPtr, FHttpResp
 		FEdgegapResponse Response = FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString());
 		if (Response.HasError())
 		{
-			EGSS_LOG(Error, TEXT("HandleGetTicketResponse::%s"), Response.Error);
+			EGSS_LOG(Error, TEXT("HandleGetTicketResponse::%s"), *Response.Error);
 			return OnError.Broadcast(Response.Error);
 		}
 		return OnTicketRetrieved.Broadcast(Response.GetData<FTicketData>());
