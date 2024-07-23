@@ -59,6 +59,7 @@ FEdgegapResponse FEdgegapResponse::FromJson(const FString& JsonString) { return 
 TSharedPtr<FJsonObject> FMatchmakerSettings::ToJson() const {
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
 	JsonObject->SetStringField(TEXT("edgegap_profile_id"), *ProfileId);
+	JsonObject->SetStringField(TEXT("player_id"), *PlayerId);
 	TSharedPtr<FJsonObject> MatchmakingJsonObject = MakeShareable(new FJsonObject);
 	MatchmakingJsonObject->SetObjectField(TEXT("selector_data"), FJsonUtils::MapToJsonObject(Selectors));
 	MatchmakingJsonObject->SetObjectField(TEXT("filter_data"), FJsonUtils::MapToJsonObject(Filters));
