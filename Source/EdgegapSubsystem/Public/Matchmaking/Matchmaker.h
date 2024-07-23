@@ -38,7 +38,7 @@ public:
 	void SetFilters(const TMap<FString, FString>& NewFilters);
 
 	UFUNCTION(BlueprintCallable, Category="Matchmaking")
-	void SetSelectors(const TMap<FString, FString>& NewSelectors);
+	void SetSelectors(const TArray<FString>& NewSelectors);
 
 	UFUNCTION(BlueprintCallable, Category="Matchmaking", meta=(AutoCreateRefTerm="UrlOptions"))
 	void ConnectToMatch(const FString& UrlOptions);

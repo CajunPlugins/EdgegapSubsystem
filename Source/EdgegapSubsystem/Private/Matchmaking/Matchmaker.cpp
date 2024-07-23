@@ -85,7 +85,7 @@ void AMatchmaker::SetFilters(const TMap<FString, FString>& NewFilters)
 	}
 }
 
-void AMatchmaker::SetSelectors(const TMap<FString, FString>& NewSelectors)
+void AMatchmaker::SetSelectors(const TArray<FString>& NewSelectors)
 {
 	if (!bMatchmaking)
 	{
