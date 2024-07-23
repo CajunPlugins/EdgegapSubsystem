@@ -61,7 +61,7 @@ struct EDGEGAPSUBSYSTEM_API FMatchmakerSettings
 	FString PlayerId;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<FString, FString> Selectors;
+	TArray<FString> Selectors;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<FString, FString> Filters;

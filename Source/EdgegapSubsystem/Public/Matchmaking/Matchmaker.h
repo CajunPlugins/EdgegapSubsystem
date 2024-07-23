@@ -32,6 +32,9 @@ public:
 	void SetProfileId(const FString& NewProfileId);
 	
 	UFUNCTION(BlueprintCallable, Category="Matchmaking")
+	void SetPlayerId(const FString& NewPlayerId);
+	
+	UFUNCTION(BlueprintCallable, Category="Matchmaking")
 	void SetFilters(const TMap<FString, FString>& NewFilters);
 
 	UFUNCTION(BlueprintCallable, Category="Matchmaking")

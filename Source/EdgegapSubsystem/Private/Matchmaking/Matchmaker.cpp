@@ -63,6 +63,17 @@ void AMatchmaker::SetProfileId(const FString& NewProfileId)
 	}
 }
 
+void AMatchmaker::SetPlayerId(const FString& NewPlayerId)
+{
+	if (!bMatchmaking)
+	{
+		Settings.PlayerId = NewPlayerId;
+	} else
+	{
+		EGMM_LOG(Error, TEXT("SetProfileId::PlayerId cannot be changed while matchmaking"))
+	}
+}
+
 void AMatchmaker::SetFilters(const TMap<FString, FString>& NewFilters)
 {
 	if (!bMatchmaking)

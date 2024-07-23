@@ -35,4 +35,14 @@ struct EDGEGAPSUBSYSTEM_API FJsonUtils
 		}
 		return JsonObject;
 	}
+
+	static TArray<TSharedPtr<FJsonValue>> ArrayToJsonValues(const TArray<FString>& Values)
+	{
+		TArray<TSharedPtr<FJsonValue>> JsonValues;
+		for (int32 i = 0; i < Values.Num(); i++)
+		{
+			JsonValues.Emplace(MakeShareable(new FJsonValueString(Values[i])));
+		}
+		return JsonValues;
+	}
 };
