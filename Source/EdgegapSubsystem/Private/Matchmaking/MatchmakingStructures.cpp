@@ -25,6 +25,10 @@ FTicketData FTicketData::FromJson(const TSharedPtr<FJsonObject>& JsonObject)
 		{
 			TicketData.Id = JsonObject->GetStringField(TEXT("ticket_id"));
 		}
+		else if (JsonObject->HasTypedField<EJson::String>(TEXT("id")))
+		{
+			TicketData.Id = JsonObject->GetStringField(TEXT("id"));
+		}
 		if (JsonObject->HasTypedField<EJson::Object>(TEXT("assignment")))
 		{
 			TicketData.Assignment = FTicketAssignment::FromJson(JsonObject->GetObjectField(TEXT("assignment")));

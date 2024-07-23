@@ -139,12 +139,17 @@ void UEdgegapSubsystem::HandleDeleteTicket(FHttpRequestPtr RequestPtr, FHttpResp
 
 TSharedRef<IHttpRequest> UEdgegapSubsystem::CreateRequest(const FMatchmakerConfig& Config, const FString& Endpoint, const FString& Method)
 {
+	FString Url = Config.Url;
+	if (Url.EndsWith(TEXT("/")))
+	{
+		Url = Url.LeftChop(1);
+	}
 	FHttpModule& HttpModule = FHttpModule::Get();
 	TSharedRef<IHttpRequest> Request = HttpModule.CreateRequest();
 	Request->SetVerb(Method);
 	Request->SetHeader("Authorization", *Config.Token);
 	Request->SetHeader("Content-Type", "application/json");
-	Request->SetURL(FString::Printf(TEXT("%s/v1%s"), *Config.Url, *Endpoint));
+	Request->SetURL(FString::Printf(TEXT("%s/v1%s"), *Url, *Endpoint));
 	Request->SetTimeout(10);
 	return Request;
 }
