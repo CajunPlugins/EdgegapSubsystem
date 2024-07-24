@@ -74,7 +74,7 @@ void AMatchmaker::SetPlayerId(const FString& NewPlayerId)
 	}
 }
 
-void AMatchmaker::SetFilters(const TMap<FString, FString>& NewFilters)
+void AMatchmaker::SetFilters(const TMap<FString, float>& NewFilters)
 {
 	if (!bMatchmaking)
 	{
@@ -85,7 +85,7 @@ void AMatchmaker::SetFilters(const TMap<FString, FString>& NewFilters)
 	}
 }
 
-void AMatchmaker::SetSelectors(const TArray<FString>& NewSelectors)
+void AMatchmaker::SetSelectors(const TMap<FString, FString>& NewSelectors)
 {
 	if (!bMatchmaking)
 	{
@@ -93,6 +93,28 @@ void AMatchmaker::SetSelectors(const TArray<FString>& NewSelectors)
 	} else
 	{
 		EGMM_LOG(Error, TEXT("SetSelectors::Selectors cannot be changed while matchmaking"))
+	}
+}
+
+void AMatchmaker::AddFilter(const FString Key, const float Value)
+{
+	if (!bMatchmaking)
+	{
+		Settings.Filters.Emplace(Key, Value);
+	} else
+	{
+		EGMM_LOG(Error, TEXT("AddFilter::Filters cannot be changed while matchmaking"))
+	}
+}
+
+void AMatchmaker::AddSelector(const FString Key, const FString Value)
+{
+	if (!bMatchmaking)
+	{
+		Settings.Selectors.Emplace(Key, Value);
+	} else
+	{
+		EGMM_LOG(Error, TEXT("AddSelector::Selectors cannot be changed while matchmaking"))
 	}
 }
 

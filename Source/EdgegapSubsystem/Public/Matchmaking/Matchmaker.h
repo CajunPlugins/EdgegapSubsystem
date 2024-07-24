@@ -35,10 +35,16 @@ public:
 	void SetPlayerId(const FString& NewPlayerId);
 	
 	UFUNCTION(BlueprintCallable, Category="Matchmaking")
-	void SetFilters(const TMap<FString, FString>& NewFilters);
+	void SetFilters(const TMap<FString, float>& NewFilters);
 
 	UFUNCTION(BlueprintCallable, Category="Matchmaking")
-	void SetSelectors(const TArray<FString>& NewSelectors);
+	void SetSelectors(const TMap<FString, FString>& NewSelectors);
+
+	UFUNCTION(BlueprintCallable, Category="Matchmaking")
+	void AddFilter(const FString Key, const float Value);
+
+	UFUNCTION(BlueprintCallable, Category="Matchmaking")
+	void AddSelector(const FString Key, const FString Value);
 
 	UFUNCTION(BlueprintCallable, Category="Matchmaking", meta=(AutoCreateRefTerm="UrlOptions"))
 	void ConnectToMatch(const FString& UrlOptions);

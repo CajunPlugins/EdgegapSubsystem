@@ -61,7 +61,7 @@ TSharedPtr<FJsonObject> FMatchmakerSettings::ToJson() const {
 	JsonObject->SetStringField(TEXT("edgegap_profile_id"), *ProfileId);
 	JsonObject->SetStringField(TEXT("player_id"), *PlayerId);
 	TSharedPtr<FJsonObject> MatchmakingJsonObject = MakeShareable(new FJsonObject);
-	MatchmakingJsonObject->SetArrayField(TEXT("selector_data"), FJsonUtils::ArrayToJsonValues(Selectors));
+	MatchmakingJsonObject->SetObjectField(TEXT("selector_data"), FJsonUtils::MapToJsonObject(Selectors));
 	MatchmakingJsonObject->SetObjectField(TEXT("filter_data"), FJsonUtils::MapToJsonObject(Filters));
 	JsonObject->SetObjectField(TEXT("matchmaking_data"), MatchmakingJsonObject);
 	return JsonObject;

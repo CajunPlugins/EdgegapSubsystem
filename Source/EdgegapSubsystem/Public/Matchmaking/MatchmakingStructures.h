@@ -61,10 +61,10 @@ struct EDGEGAPSUBSYSTEM_API FMatchmakerSettings
 	FString PlayerId;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FString> Selectors;
+	TMap<FString, FString> Selectors;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<FString, FString> Filters;
+	TMap<FString, float> Filters;
 
 	TSharedPtr<FJsonObject> ToJson() const;
 	FString ToJsonString() const;

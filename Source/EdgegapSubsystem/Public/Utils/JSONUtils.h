@@ -24,7 +24,7 @@ struct EDGEGAPSUBSYSTEM_API FJsonUtils
 		return TSharedPtr<FJsonObject>();
 	}
 
-	static TSharedPtr<FJsonObject> MapToJsonObject(const TMap<FString,FString>& Map)
+	static TSharedPtr<FJsonObject> MapToJsonObject(const TMap<FString, FString>& Map)
 	{
 		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
 		TArray<FString> Keys;
@@ -32,6 +32,18 @@ struct EDGEGAPSUBSYSTEM_API FJsonUtils
 		for (int32 i = 0; i < Keys.Num(); i++)
 		{
 			JsonObject->SetStringField(Keys[i], Map[Keys[i]]);
+		}
+		return JsonObject;
+	}
+
+	static TSharedPtr<FJsonObject> MapToJsonObject(const TMap<FString, float>& Map)
+	{
+		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
+		TArray<FString> Keys;
+		Map.GenerateKeyArray(Keys);
+		for (int32 i = 0; i < Keys.Num(); i++)
+		{
+			JsonObject->SetNumberField(Keys[i], Map[Keys[i]]);
 		}
 		return JsonObject;
 	}
