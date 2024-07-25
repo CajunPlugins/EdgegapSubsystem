@@ -4,9 +4,9 @@
 
 namespace Errors
 {
-	constexpr const wchar_t* TicketNotFound = TEXT("TICKET_NOT_FOUND");
-	constexpr const wchar_t* InvalidRequest = TEXT("INVALID_REQUEST");
-	constexpr const wchar_t* CreateTicketFailure = TEXT("CREATE_TICKET_FAILURE");
+	const FString TicketNotFound = TEXT("TICKET_NOT_FOUND");
+	const FString InvalidRequest = TEXT("INVALID_REQUEST");
+	const FString CreateTicketFailure = TEXT("CREATE_TICKET_FAILURE");
 
 	static bool IsEdgegapError(const FString& Error) { return Error == TicketNotFound || Error == InvalidRequest || Error == CreateTicketFailure; }
 }
