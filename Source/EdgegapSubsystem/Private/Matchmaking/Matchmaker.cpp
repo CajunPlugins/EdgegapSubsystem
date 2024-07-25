@@ -201,7 +201,7 @@ void AMatchmaker::HandleMatchFound()
 
 void AMatchmaker::HandleError(const FString Reason)
 {
-    if (Errors::IsEdgegapError(Reason))
+    if (Errors::IsEdgegapError(Reason) || Reason == TEXT("Failed"))
     {
 	    HandleTicketDeleted();
     }
