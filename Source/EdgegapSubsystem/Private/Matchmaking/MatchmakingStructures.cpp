@@ -13,6 +13,10 @@ FTicketAssignment FTicketAssignment::FromJson(const TSharedPtr<FJsonObject>& Jso
 	{
 		TicketAssignment.Host = JsonObject->GetStringField(TEXT("server_host"));
 	}
+	else if (JsonObject->HasTypedField<EJson::String>(TEXT("connection")))
+	{
+		TicketAssignment.Host = JsonObject->GetStringField(TEXT("connection"));
+	}
 	return TicketAssignment;
 }
 
