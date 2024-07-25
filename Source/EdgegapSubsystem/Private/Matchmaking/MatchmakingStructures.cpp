@@ -39,17 +39,20 @@ FTicketData FTicketData::FromJson(const TSharedPtr<FJsonObject>& JsonObject)
 
 FEdgegapResponse FEdgegapResponse::FromJson(const TSharedPtr<FJsonObject>& JsonObject) 	{
 	FEdgegapResponse EdgegapResponse;
-	if (JsonObject->HasTypedField<EJson::String>(TEXT("request_id")))
+	if (JsonObject.IsValid())
 	{
-		EdgegapResponse.RequestId = JsonObject->GetStringField(TEXT("request_id"));
-	}
-	if (JsonObject->HasTypedField<EJson::Object>(TEXT("data")))
-	{
-		EdgegapResponse.Data = JsonObject->GetObjectField(TEXT("data"));
-	}
-	if (JsonObject->HasTypedField<EJson::String>(TEXT("error")))
-	{
-		EdgegapResponse.Error = JsonObject->GetStringField(TEXT("error"));
+		if (JsonObject->HasTypedField<EJson::String>(TEXT("request_id")))
+		{
+			EdgegapResponse.RequestId = JsonObject->GetStringField(TEXT("request_id"));
+		}
+		if (JsonObject->HasTypedField<EJson::Object>(TEXT("data")))
+		{
+			EdgegapResponse.Data = JsonObject->GetObjectField(TEXT("data"));
+		}
+		if (JsonObject->HasTypedField<EJson::String>(TEXT("error")))
+		{
+			EdgegapResponse.Error = JsonObject->GetStringField(TEXT("error"));
+		}
 	}
 	return EdgegapResponse;
 }

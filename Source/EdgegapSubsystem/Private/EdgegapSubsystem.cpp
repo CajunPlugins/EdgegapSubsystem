@@ -85,7 +85,7 @@ void UEdgegapSubsystem::UnregisterMatchmaker(const FString& Id)
 // ReSharper disable once CppPassValueParameterByConstReference
 void UEdgegapSubsystem::HandleCreateTicket(FHttpRequestPtr RequestPtr, FHttpResponsePtr ResponsePtr, const bool bWasSuccessful)
 {
-	if (bWasSuccessful)
+	if (bWasSuccessful && ResponsePtr->GetResponseCode() >= 200 && ResponsePtr->GetResponseCode() < 299)
 	{
 		EGSS_LOG(Log, TEXT("HandleCreateTicketResponse::%s"), *ResponsePtr->GetContentAsString());
 		FEdgegapResponse Response = FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString());
@@ -103,7 +103,7 @@ void UEdgegapSubsystem::HandleCreateTicket(FHttpRequestPtr RequestPtr, FHttpResp
 // ReSharper disable once CppPassValueParameterByConstReference
 void UEdgegapSubsystem::HandleGetTicket(FHttpRequestPtr RequestPtr, FHttpResponsePtr ResponsePtr, const bool bWasSuccessful)
 {
-	if (bWasSuccessful)
+	if (bWasSuccessful && ResponsePtr->GetResponseCode() >= 200 && ResponsePtr->GetResponseCode() < 299)
 	{
 		EGSS_LOG(Log, TEXT("HandleGetTicketResponse::%s"), *ResponsePtr->GetContentAsString());
 		FEdgegapResponse Response = FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString()); 
@@ -122,7 +122,7 @@ void UEdgegapSubsystem::HandleGetTicket(FHttpRequestPtr RequestPtr, FHttpRespons
 // ReSharper disable once CppPassValueParameterByConstReference
 void UEdgegapSubsystem::HandleDeleteTicket(FHttpRequestPtr RequestPtr, FHttpResponsePtr ResponsePtr, const bool bWasSuccessful)
 {
-	if (bWasSuccessful)
+	if (bWasSuccessful && ResponsePtr->GetResponseCode() >= 200 && ResponsePtr->GetResponseCode() < 299)
 	{
 		EGSS_LOG(Log, TEXT("HandleDeleteTicket::%s"), *ResponsePtr->GetContentAsString());
 		FEdgegapResponse Response = FEdgegapResponse::FromJson(ResponsePtr->GetContentAsString());
