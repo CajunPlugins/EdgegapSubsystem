@@ -1,6 +1,8 @@
 ﻿// Copyright 2024 Cajun Pro LLC. All Rights Reserved.
 
 #include "Matchmaking/Matchmaker.h"
+
+#include "EdgegapErrors.h"
 #include "EdgegapSubsystem.h"
 #include "Matchmaking/EdgegapSubsystemMatchmakingMacros.h"
 
@@ -182,7 +184,7 @@ void AMatchmaker::HandleTicketRetrieved(const FTicketData TicketData)
 	}
 }
 
-void AMatchmaker::HandleTicketDeleted(FTicketData TicketData)
+void AMatchmaker::HandleTicketDeleted()
 {
 	GetWorldTimerManager().ClearTimer(MatchStatusTimerHandle);
 	bMatchmaking = false;
@@ -199,6 +201,10 @@ void AMatchmaker::HandleMatchFound()
 
 void AMatchmaker::HandleError(const FString Reason)
 {
+    if (Errors::IsEdgegapError(Reason))
+    {
+	    HandleTicketDeleted();
+    }
 	OnError(Reason);
 }
 

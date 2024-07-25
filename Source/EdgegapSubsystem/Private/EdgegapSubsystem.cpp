@@ -131,7 +131,7 @@ void UEdgegapSubsystem::HandleDeleteTicket(FHttpRequestPtr RequestPtr, FHttpResp
 			EGSS_LOG(Error, TEXT("HandleGetTicketResponse::%s"), *Response.Error);
 			return OnError.Broadcast(Response.Error);
 		}
-		return OnTicketRetrieved.Broadcast(Response.GetData<FTicketData>());
+		return OnTicketDeleted.Broadcast();
 	}
 	EGSS_LOG(Error, TEXT("HandleDeleteTicket::%s"), *FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));
 	OnError.Broadcast(*FHttpUtils::GetErrorString(RequestPtr, ResponsePtr));

@@ -80,7 +80,7 @@ protected:
 	UFUNCTION()
 	virtual void HandleTicketRetrieved(FTicketData TicketData);
 	UFUNCTION()
-	virtual void HandleTicketDeleted(FTicketData TicketData);
+	virtual void HandleTicketDeleted();
 	UFUNCTION()
 	virtual void HandleMatchFound();
 	UFUNCTION()

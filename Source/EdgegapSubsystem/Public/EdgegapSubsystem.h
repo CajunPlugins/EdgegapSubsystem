@@ -8,6 +8,7 @@
 #include "EdgegapSubsystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTicketResponseDelegate, FTicketData, Data);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnResponseDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnErrorDeletage, FString, Reason = "");
 
 DECLARE_LOG_CATEGORY_EXTERN(LogEdgegapSubsystem, Log, All);
@@ -50,7 +51,7 @@ public:
 	FOnTicketResponseDelegate OnTicketRetrieved;
 
 	UPROPERTY(BlueprintAssignable)
-	FOnTicketResponseDelegate OnTicketDeleted;
+	FOnResponseDelegate OnTicketDeleted;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnErrorDeletage OnError;
